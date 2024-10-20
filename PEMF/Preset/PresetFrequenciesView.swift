@@ -7,14 +7,15 @@ struct PresetFrequenciesView: View {
     @State private var activePresets: [String: PresetTimer] = [:]
     
     let presets: [Preset] = [
-        Preset(name: "Relaxation", frequency1: 10.0, dutyCycle1: 0.5, frequency2: 7.83, dutyCycle2: 0.5, icon: "leaf", duration: 600), // 10 minutes
+        Preset(name: "Relaxation", frequency1: 138.59, dutyCycle1: 0.3, frequency2: 4.00, dutyCycle2: 0.3, icon: "leaf", duration: 5400),
         Preset(name: "High Blood Pressure", frequency1: 15.0, dutyCycle1: 0.6, frequency2: 10.0, dutyCycle2: 0.5, icon: "heart", duration: 900), // 15 minutes
         Preset(name: "Pain Relief", frequency1: 20.0, dutyCycle1: 0.5, frequency2: 5.0, dutyCycle2: 0.7, icon: "bandage", duration: 1200), // 20 minutes
-        Preset(name: "Sleep Aid", frequency1: 4.0, dutyCycle1: 0.7, frequency2: 2.0, dutyCycle2: 0.6, icon: "moon.zzz", duration: 1800), // 30 minutes
-        Preset(name: "Energy Boost", frequency1: 30.0, dutyCycle1: 0.5, frequency2: 25.0, dutyCycle2: 0.5, icon: "bolt", duration: 300), // 5 minutes
-        Preset(name: "Stress Reduction", frequency1: 8.0, dutyCycle1: 0.6, frequency2: 6.0, dutyCycle2: 0.6, icon: "brain.head.profile", duration: 1200), // 20 minutes
+        Preset(name: "Sleep Aid", frequency1: 98.0, dutyCycle1: 0.3, frequency2: 2.0, dutyCycle2: 0.3, icon: "moon.zzz", duration: 5400), //  1 hour
+        Preset(name: "Energy Boost", frequency1: 261.63, dutyCycle1: 0.3, frequency2: 14.0, dutyCycle2: 0.3, icon: "bolt", duration: 5400), // 1 hour
+        Preset(name: "Concentration", frequency1: 123.47, dutyCycle1: 0.3, frequency2: 23.0, dutyCycle2: 0.3, icon: "brain.head.profile", duration: 5400), // 1 hour
         Preset(name: "Bone Healing", frequency1: 15.0, dutyCycle1: 0.5, frequency2: 72.0, dutyCycle2: 0.5, icon: "figure.walk", duration: 1800), // 30 minutes
-        Preset(name: "Muscle Recovery", frequency1: 40.0, dutyCycle1: 0.5, frequency2: 35.0, dutyCycle2: 0.5, icon: "figure.run", duration: 1200) // 20 minutes
+        Preset(name: "Muscle Recovery", frequency1: 40.0, dutyCycle1: 0.5, frequency2: 35.0, dutyCycle2: 0.5, icon: "figure.run", duration: 1200), // 20 minutes
+        Preset(name: "Creativity", frequency1: 110.00, dutyCycle1: 0.3, frequency2: 6.0, dutyCycle2: 0.3, icon: "paintpalette.fill", duration: 5400)
     ]
     
     var body: some View {
