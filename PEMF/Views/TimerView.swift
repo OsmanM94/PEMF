@@ -54,42 +54,39 @@ struct TimerView: View {
                         }
                     }) {
                         Text(timerManager.timerActive ? "Stop" : "Start")
-                            .font(.title2)
-                            .padding()
-                            .background(timerManager.timerActive ? Color.red : Color.green)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .font(.title3)
+                            .foregroundStyle(timerManager.timerActive ? Color.red : Color.green)
+                            
                     }
+                    .buttonStyle(.bordered)
+                    .controlSize(.extraLarge)
                     
                     Button(action: {
                         timerManager.resetTimer()
                     }) {
                         Text("Reset")
-                            .font(.title2)
-                            .padding()
-                            .background(Color.gray)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                            .font(.title3)
                     }
-                }
-                
-                if !timerManager.timerActive && timerManager.secondsElapsed > 0 {
-                    Button(action: {
-                        showingAddSession = true
-                    }) {
-                        Text("Save Session")
-                            .font(.title2)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.extraLarge)
+                    
                 }
             }
             .navigationTitle("Timer")
             .padding()
             .sheet(isPresented: $showingAddSession) {
                 AddSessionView(duration: TimeInterval(timerManager.secondsElapsed))
+            }
+            
+            if !timerManager.timerActive && timerManager.secondsElapsed > 0 {
+                Button(action: {
+                    showingAddSession = true
+                }) {
+                    Text("Save")
+                        .font(.title2)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.extraLarge)
             }
         }
     }

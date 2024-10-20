@@ -3,6 +3,7 @@ import SwiftUI
 
 struct MainView: View {
     @State private var selectedTab: Int = 0
+    @State private var timerManager = TimerManager()
     
     var body: some View {
         TabView(selection: $selectedTab) {

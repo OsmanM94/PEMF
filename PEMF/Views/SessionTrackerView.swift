@@ -4,7 +4,7 @@ import SwiftData
 
 struct SessionTrackerView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var sessions: [TherapySession]
+    @Query(sort: \TherapySession.order) private var sessions: [TherapySession]
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var showingAddSession = false
     @State private var selectedSession: TherapySession?
@@ -25,43 +25,9 @@ struct SessionTrackerView: View {
     private var sessionsList: some View {
         List {
             ForEach(sessions) { session in
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(systemName: "calendar")
-                            .foregroundStyle(.blue)
-                        Text(session.date, style: .date)
-                            .font(.headline)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "clock")
-                            .foregroundStyle(.green)
-                        Text("Duration: \(formatDuration(session.duration))")
-                            .font(.subheadline)
-                    }
-                    
-                    HStack {
-                        Image(systemName: "waveform.path")
-                            .foregroundStyle(.orange)
-                        Text("Frequencies: \(session.frequency1, specifier: "%.1f") Hz, \(session.frequency2, specifier: "%.1f") Hz")
-                            .font(.subheadline)
-                    }
-                    
-                    if let preset = session.preset {
-                        HStack {
-                            Image(systemName: "list.bullet")
-                                .foregroundStyle(.purple)
-                            Text("Preset: \(preset)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-                .padding(.vertical, 4)
-                .onTapGesture {
-                    selectedSession = session
-                }
+                sessionRow(for: session)
             }
+            .onMove(perform: moveSession)
             .onDelete(perform: deleteSessions)
         }
         .toolbar {
@@ -86,13 +52,62 @@ struct SessionTrackerView: View {
         }
     }
     
-    func deleteSessions(at offsets: IndexSet) {
+    private func sessionRow(for session: TherapySession) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "calendar")
+                    .foregroundStyle(.blue)
+                Text(session.date, style: .date)
+                    .font(.headline)
+            }
+            
+            HStack {
+                Image(systemName: "clock")
+                    .foregroundStyle(.green)
+                Text("Duration: \(formatDuration(session.duration))")
+                    .font(.subheadline)
+            }
+            
+            HStack {
+                Image(systemName: "waveform.path")
+                    .foregroundStyle(.orange)
+                Text("Frequencies: \(session.frequency1, specifier: "%.1f") Hz, \(session.frequency2, specifier: "%.1f") Hz")
+                    .font(.subheadline)
+            }
+            
+            if let preset = session.preset {
+                HStack {
+                    Image(systemName: "list.bullet")
+                        .foregroundStyle(.purple)
+                    Text("Preset: \(preset)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+        .onTapGesture {
+            selectedSession = session
+        }
+    }
+    
+    private func moveSession(from source: IndexSet, to destination: Int) {
+        var mutableSessions = sessions
+        mutableSessions.move(fromOffsets: source, toOffset: destination)
+        
+        // Update the order in SwiftData
+        for (index, session) in mutableSessions.enumerated() {
+            session.order = Int16(index)
+        }
+    }
+    
+    private func deleteSessions(at offsets: IndexSet) {
         for index in offsets {
             modelContext.delete(sessions[index])
         }
     }
     
-    func formatDuration(_ duration: TimeInterval) -> String {
+    private func formatDuration(_ duration: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         if duration < 60 {
             formatter.allowedUnits = [.second]
@@ -107,6 +122,7 @@ struct SessionTrackerView: View {
         return formatter.string(from: duration) ?? ""
     }
 }
+
 
 struct AddSessionView: View {
     @Environment(\.modelContext) private var modelContext
