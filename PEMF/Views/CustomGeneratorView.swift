@@ -49,7 +49,7 @@ struct CustomGeneratorView: View {
                 })
                 .sensoryFeedback(.decrease, trigger: frequency.wrappedValue)
                 
-                Text("\(frequency.wrappedValue, specifier: "%.2f")")
+                Text("\(frequency.wrappedValue, specifier: "%.2f") Hz")
                     .font(.system(size: 24, weight: .bold))
                     .frame(width: 120)
                 

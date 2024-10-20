@@ -1,5 +1,6 @@
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PEMFApp: App {
@@ -10,5 +11,6 @@ struct PEMFApp: App {
             MainView()
                 .environment(toneGenerator)
         }
+        .modelContainer(for: TherapySession.self)
     }
 }
