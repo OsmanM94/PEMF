@@ -1,5 +1,6 @@
 
 import SwiftUI
+import MediaPlayer
 
 struct CustomGeneratorView: View {
     @Environment(ToneGenerator.self) private var toneGenerator

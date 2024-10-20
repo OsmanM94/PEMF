@@ -39,7 +39,12 @@ final class ToneGenerator {
             guard let self = self else { return noErr }
             let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
             
+            // Compression parameters
+            let threshold: Float = 0.8 // Compression threshold
+            let ratio: Float = 4.0 // Compression ratio (higher means stronger compression)
+            
             for frame in 0..<Int(frameCount) {
+                // Adjust gains based on target
                 self.gain1 += (self.targetGain1 - self.gain1) * self.smoothness
                 self.gain2 += (self.targetGain2 - self.gain2) * self.smoothness
                 let newFreq1 = self.frequency1 + (self.targetFrequency1 - self.frequency1) * self.frequencySmoothing
@@ -63,9 +68,16 @@ final class ToneGenerator {
                 if self.currentPhase1 > 2.0 * .pi { self.currentPhase1 -= 2.0 * .pi }
                 if self.currentPhase2 > 2.0 * .pi { self.currentPhase2 -= 2.0 * .pi }
                 
+                // Apply simple compression
+                var finalValue = Float(combinedValue)
+                if abs(finalValue) > threshold {
+                    finalValue = threshold + (finalValue - threshold) / ratio
+                }
+                
+                // Write the final compressed value into the buffer
                 for buffer in ablPointer {
                     let buf: UnsafeMutableBufferPointer<Float> = UnsafeMutableBufferPointer(buffer)
-                    buf[frame] = Float(combinedValue)
+                    buf[frame] = finalValue
                 }
             }
             return noErr
@@ -83,6 +95,7 @@ final class ToneGenerator {
             print("Could not start audio engine: \(error.localizedDescription)")
         }
     }
+
     
     private func generatePulse(phase: Double, dutyCycle: Double) -> Double {
         return phase / (2 * .pi) < dutyCycle ? 1.0 : -1.0

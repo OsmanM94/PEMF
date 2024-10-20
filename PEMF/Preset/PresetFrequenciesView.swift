@@ -1,7 +1,6 @@
 
 import SwiftUI
 
-
 struct PresetFrequenciesView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var activePresets: [String: PresetTimer] = [:]
