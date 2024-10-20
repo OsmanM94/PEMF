@@ -8,7 +8,6 @@ struct SessionTrackerView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var showingAddSession = false
     @State private var selectedSession: TherapySession?
-    @State private var showingTimerView = false
     
     var body: some View {
         NavigationStack {
@@ -71,9 +70,6 @@ struct SessionTrackerView: View {
                     Button("Manual Entry") {
                         showingAddSession = true
                     }
-                    Button("Timed Session") {
-                        showingTimerView = true
-                    }
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -84,9 +80,6 @@ struct SessionTrackerView: View {
         }
         .sheet(isPresented: $showingAddSession) {
             AddSessionView(duration: 0)
-        }
-        .sheet(isPresented: $showingTimerView) {
-            TimerView()
         }
         .sheet(item: $selectedSession) { session in
             SessionDetailView(session: session)

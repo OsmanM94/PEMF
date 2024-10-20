@@ -41,7 +41,7 @@ struct CustomGeneratorView: View {
     
     private func frequencyControl(frequency: Binding<Double>, dutyCycle: Binding<Double>, title: String, setFrequency: @escaping (Double) -> Void, isPlaying: Bool, playTone: @escaping () -> Void, stopTone: @escaping () -> Void) -> some View {
         VStack(spacing: 20) {
-            HStack {
+            HStack(spacing: 40) {
                 FrequencyButton(systemName: "minus.circle.fill", action: {
                     adjustFrequency(frequency: frequency, setFrequency: setFrequency, increment: false)
                 }, longPressAction: {
@@ -51,7 +51,7 @@ struct CustomGeneratorView: View {
                 
                 Text("\(frequency.wrappedValue, specifier: "%.2f") Hz")
                     .font(.system(size: 24, weight: .bold))
-                    .frame(width: 120)
+                    .monospacedDigit()
                 
                 FrequencyButton(systemName: "plus.circle.fill", action: {
                     adjustFrequency(frequency: frequency, setFrequency: setFrequency, increment: true)
@@ -117,7 +117,7 @@ struct FrequencyButton: View {
     var body: some View {
         Image(systemName: systemName)
             .font(.system(size: 44))
-            .foregroundColor(.blue)
+            .foregroundStyle(.blue)
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { _ in
