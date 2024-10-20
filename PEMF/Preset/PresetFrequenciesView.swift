@@ -6,15 +6,105 @@ struct PresetFrequenciesView: View {
     @State private var activePresets: [String: PresetTimer] = [:]
     
     let presets: [Preset] = [
-        Preset(name: "Relaxation", frequency1: 138.59, dutyCycle1: 0.3, frequency2: 4.00, dutyCycle2: 0.3, icon: "leaf", duration: 5400),
-        Preset(name: "High Blood Pressure", frequency1: 15.0, dutyCycle1: 0.6, frequency2: 10.0, dutyCycle2: 0.5, icon: "heart", duration: 900), // 15 minutes
-        Preset(name: "Pain Relief", frequency1: 20.0, dutyCycle1: 0.5, frequency2: 5.0, dutyCycle2: 0.7, icon: "bandage", duration: 1200), // 20 minutes
-        Preset(name: "Sleep Aid", frequency1: 98.0, dutyCycle1: 0.3, frequency2: 2.0, dutyCycle2: 0.3, icon: "moon.zzz", duration: 5400), //  1 hour
-        Preset(name: "Energy Boost", frequency1: 261.63, dutyCycle1: 0.3, frequency2: 14.0, dutyCycle2: 0.3, icon: "bolt", duration: 5400), // 1 hour
-        Preset(name: "Concentration", frequency1: 123.47, dutyCycle1: 0.3, frequency2: 23.0, dutyCycle2: 0.3, icon: "brain.head.profile", duration: 5400), // 1 hour
-        Preset(name: "Bone Healing", frequency1: 15.0, dutyCycle1: 0.5, frequency2: 72.0, dutyCycle2: 0.5, icon: "figure.walk", duration: 1800), // 30 minutes
-        Preset(name: "Muscle Recovery", frequency1: 40.0, dutyCycle1: 0.5, frequency2: 35.0, dutyCycle2: 0.5, icon: "figure.run", duration: 1200), // 20 minutes
-        Preset(name: "Creativity", frequency1: 110.00, dutyCycle1: 0.3, frequency2: 6.0, dutyCycle2: 0.3, icon: "paintpalette.fill", duration: 5400)
+        Preset(
+            name: "Relaxation",
+            frequency1: 138.59,
+            dutyCycle1: 0.3,
+            frequency2: 4.00,
+            dutyCycle2: 0.3,
+            icon: "leaf",
+            duration: 5400,
+            threshold: 0.8,
+            ratio: 4.0
+        ),
+        Preset(
+            name: "High Blood Pressure",
+            frequency1: 15.0,
+            dutyCycle1: 0.6,
+            frequency2: 10.0,
+            dutyCycle2: 0.5,
+            icon: "heart",
+            duration: 900,
+            threshold: 0.8,
+            ratio: 4.0
+        ),
+        Preset(
+            name: "Pain Relief",
+            frequency1: 20.0,
+            dutyCycle1: 0.5,
+            frequency2: 5.0,
+            dutyCycle2: 0.7,
+            icon: "bandage",
+            duration: 1200,
+            threshold: 0.75,
+            ratio: 3.5
+        ),
+        Preset(
+            name: "Sleep Aid",
+            frequency1: 98.0,
+            dutyCycle1: 0.3,
+            frequency2: 2.0,
+            dutyCycle2: 0.3,
+            icon: "moon.zzz",
+            duration: 5400,
+            threshold: 0.65,
+            ratio: 2.5
+        ),
+        Preset(
+            name: "Energy Boost",
+            frequency1: 261.63,
+            dutyCycle1: 0.3,
+            frequency2: 14.0,
+            dutyCycle2: 0.3,
+            icon: "bolt",
+            duration: 5400,
+            threshold: 0.85,
+            ratio: 4.5
+        ),
+        Preset(
+            name: "Concentration",
+            frequency1: 123.47,
+            dutyCycle1: 0.3,
+            frequency2: 23.0,
+            dutyCycle2: 0.3,
+            icon: "brain.head.profile",
+            duration: 5400,
+            threshold: 0.8,
+            ratio: 4.0
+        ),
+        Preset(
+            name: "Bone Healing",
+            frequency1: 15.0,
+            dutyCycle1: 0.5,
+            frequency2: 72.0,
+            dutyCycle2: 0.5,
+            icon: "figure.walk",
+            duration: 1800,
+            threshold: 0.75,
+            ratio: 3.5
+        ),
+        Preset(
+            name: "Muscle Recovery",
+            frequency1: 40.0,
+            dutyCycle1: 0.5,
+            frequency2: 35.0,
+            dutyCycle2: 0.5,
+            icon: "figure.run",
+            duration: 1200,
+            threshold: 0.8,
+            ratio: 4.0
+        ),
+        Preset(
+            name: "Creativity",
+            frequency1: 110.00,
+            dutyCycle1: 0.3,
+            frequency2: 6.0,
+            dutyCycle2: 0.3,
+            icon: "paintpalette.fill",
+            duration: 5400,
+            threshold: 0.8,
+            ratio: 4.0
+        )
     ]
     
     var body: some View {
@@ -37,6 +127,10 @@ struct PresetFrequenciesView: View {
                                 .foregroundStyle(.secondary)
                             
                             Text("F2: \(preset.frequency2, specifier: "%.1f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            
+                            Text("Threshold: \(preset.threshold, specifier: "%.1f"), Ratio: \(preset.ratio, specifier: "%.1f")")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             
@@ -93,7 +187,9 @@ struct PresetFrequenciesView: View {
             frequency1: preset.frequency1,
             dutyCycle1: preset.dutyCycle1,
             frequency2: preset.frequency2,
-            dutyCycle2: preset.dutyCycle2
+            dutyCycle2: preset.dutyCycle2,
+            threshold: preset.threshold,
+            ratio: preset.ratio
         )
         toneGenerator.playTone1()
         toneGenerator.playTone2()

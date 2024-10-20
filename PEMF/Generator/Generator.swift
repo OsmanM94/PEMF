@@ -29,6 +29,9 @@ final class ToneGenerator {
     private var customDutyCycle1: Double = 0.5
     private var customDutyCycle2: Double = 0.5
     
+    private var threshold: Float = 0.8
+    private var ratio: Float = 4.0
+    
     init() {
         audioEngine = AVAudioEngine()
         
@@ -39,12 +42,7 @@ final class ToneGenerator {
             guard let self = self else { return noErr }
             let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
             
-            // Compression parameters
-            let threshold: Float = 0.8 // Compression threshold
-            let ratio: Float = 4.0 // Compression ratio (higher means stronger compression)
-            
             for frame in 0..<Int(frameCount) {
-                // Adjust gains based on target
                 self.gain1 += (self.targetGain1 - self.gain1) * self.smoothness
                 self.gain2 += (self.targetGain2 - self.gain2) * self.smoothness
                 let newFreq1 = self.frequency1 + (self.targetFrequency1 - self.frequency1) * self.frequencySmoothing
@@ -68,13 +66,11 @@ final class ToneGenerator {
                 if self.currentPhase1 > 2.0 * .pi { self.currentPhase1 -= 2.0 * .pi }
                 if self.currentPhase2 > 2.0 * .pi { self.currentPhase2 -= 2.0 * .pi }
                 
-                // Apply simple compression
                 var finalValue = Float(combinedValue)
-                if abs(finalValue) > threshold {
-                    finalValue = threshold + (finalValue - threshold) / ratio
+                if abs(finalValue) > self.threshold {
+                    finalValue = self.threshold + (finalValue - self.threshold) / self.ratio
                 }
                 
-                // Write the final compressed value into the buffer
                 for buffer in ablPointer {
                     let buf: UnsafeMutableBufferPointer<Float> = UnsafeMutableBufferPointer(buffer)
                     buf[frame] = finalValue
@@ -95,7 +91,6 @@ final class ToneGenerator {
             print("Could not start audio engine: \(error.localizedDescription)")
         }
     }
-
     
     private func generatePulse(phase: Double, dutyCycle: Double) -> Double {
         return phase / (2 * .pi) < dutyCycle ? 1.0 : -1.0
@@ -157,12 +152,14 @@ final class ToneGenerator {
         customDutyCycle2 = dutyCycle2
     }
     
-    func applyPresetSettings(frequency1: Double, dutyCycle1: Double, frequency2: Double, dutyCycle2: Double) {
+    func applyPresetSettings(frequency1: Double, dutyCycle1: Double, frequency2: Double, dutyCycle2: Double, threshold: Float, ratio: Float) {
         DispatchQueue.main.async {
             self.targetFrequency1 = frequency1
             self.targetFrequency2 = frequency2
             self.dutyCycle1 = dutyCycle1
             self.dutyCycle2 = dutyCycle2
+            self.threshold = threshold
+            self.ratio = ratio
         }
     }
     
@@ -174,16 +171,8 @@ final class ToneGenerator {
             self.targetFrequency2 = 40.0
             self.dutyCycle1 = 0.5
             self.dutyCycle2 = 0.5
+            self.threshold = 0.8
+            self.ratio = 4.0
         }
-    }
-    
-    func setCustomFrequency1(_ newValue: Double) {
-        customFrequency1 = newValue
-        setFrequency1(newValue)
-    }
-    
-    func setCustomFrequency2(_ newValue: Double) {
-        customFrequency2 = newValue
-        setFrequency2(newValue)
     }
 }
