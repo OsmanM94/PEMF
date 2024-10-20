@@ -1,9 +1,3 @@
-//
-//  Generator.swift
-//  PEMF
-//
-//  Created by asia on 20.10.2024.
-//
 
 import Foundation
 import AVFoundation
@@ -29,6 +23,11 @@ final class ToneGenerator {
     private(set) var frequency2: Double = 40.0
     var dutyCycle1: Double = 0.5
     var dutyCycle2: Double = 0.5
+    
+    private var customFrequency1: Double = 5.0
+    private var customFrequency2: Double = 40.0
+    private var customDutyCycle1: Double = 0.5
+    private var customDutyCycle2: Double = 0.5
     
     init() {
         audioEngine = AVAudioEngine()
@@ -127,5 +126,51 @@ final class ToneGenerator {
             self.targetGain2 = 0.0
             self.isPlaying2 = false
         }
+    }
+    
+    func applyCustomSettings() {
+        DispatchQueue.main.async {
+            self.targetFrequency1 = self.customFrequency1
+            self.targetFrequency2 = self.customFrequency2
+            self.dutyCycle1 = self.customDutyCycle1
+            self.dutyCycle2 = self.customDutyCycle2
+        }
+    }
+    
+    func saveCustomSettings() {
+        customFrequency1 = frequency1
+        customFrequency2 = frequency2
+        customDutyCycle1 = dutyCycle1
+        customDutyCycle2 = dutyCycle2
+    }
+    
+    func applyPresetSettings(frequency1: Double, dutyCycle1: Double, frequency2: Double, dutyCycle2: Double) {
+        DispatchQueue.main.async {
+            self.targetFrequency1 = frequency1
+            self.targetFrequency2 = frequency2
+            self.dutyCycle1 = dutyCycle1
+            self.dutyCycle2 = dutyCycle2
+        }
+    }
+    
+    func resetToDefaults() {
+        DispatchQueue.main.async {
+            self.stopTone1()
+            self.stopTone2()
+            self.targetFrequency1 = 5.0
+            self.targetFrequency2 = 40.0
+            self.dutyCycle1 = 0.5
+            self.dutyCycle2 = 0.5
+        }
+    }
+    
+    func setCustomFrequency1(_ newValue: Double) {
+        customFrequency1 = newValue
+        setFrequency1(newValue)
+    }
+    
+    func setCustomFrequency2(_ newValue: Double) {
+        customFrequency2 = newValue
+        setFrequency2(newValue)
     }
 }

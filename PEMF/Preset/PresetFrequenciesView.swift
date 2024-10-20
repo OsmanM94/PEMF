@@ -66,6 +66,9 @@ struct PresetFrequenciesView: View {
             }
             .navigationTitle("Presets")
         }
+        .onDisappear {
+            stopAllPresets()
+        }
     }
     
     private func startPreset(_ preset: Preset) {
@@ -82,15 +85,26 @@ struct PresetFrequenciesView: View {
         activePresets.removeValue(forKey: preset.name)
         toneGenerator.stopTone1()
         toneGenerator.stopTone2()
+        toneGenerator.resetToDefaults()
     }
     
     private func applyPreset(_ preset: Preset) {
-        toneGenerator.setFrequency1(preset.frequency1)
-        toneGenerator.dutyCycle1 = preset.dutyCycle1
-        toneGenerator.setFrequency2(preset.frequency2)
-        toneGenerator.dutyCycle2 = preset.dutyCycle2
+        toneGenerator.applyPresetSettings(
+            frequency1: preset.frequency1,
+            dutyCycle1: preset.dutyCycle1,
+            frequency2: preset.frequency2,
+            dutyCycle2: preset.dutyCycle2
+        )
         toneGenerator.playTone1()
         toneGenerator.playTone2()
+    }
+    
+    private func stopAllPresets() {
+        for preset in activePresets.keys {
+            if let preset = presets.first(where: { $0.name == preset }) {
+                stopPreset(preset)
+            }
+        }
     }
     
     private func formatTime(_ timeInterval: TimeInterval) -> String {

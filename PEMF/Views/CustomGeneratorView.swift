@@ -35,6 +35,12 @@ struct CustomGeneratorView: View {
                     .frame(maxWidth: .infinity, alignment: .bottomLeading)
                     .padding()
             }
+            .onAppear {
+                toneGenerator.applyCustomSettings()
+            }
+            .onDisappear {
+                toneGenerator.saveCustomSettings()
+            }
             .navigationTitle("PEMF")
         }
     }
