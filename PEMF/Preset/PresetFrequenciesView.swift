@@ -18,37 +18,37 @@ struct PresetFrequenciesView: View {
             ratio: 4.0
         ),
         Preset(
-            name: "High Blood Pressure",
-            frequency1: 15.0,
-            dutyCycle1: 0.6,
-            frequency2: 10.0,
-            dutyCycle2: 0.5,
-            icon: "heart",
-            duration: 900,
+            name: "Osteoporosis",
+            frequency1: 50.0,
+            dutyCycle1: 0.4,
+            frequency2: 100.0,
+            dutyCycle2: 0.41,
+            icon: "figure.walk",
+            duration: 5400,
             threshold: 0.8,
             ratio: 4.0
         ),
         Preset(
             name: "Pain Relief",
-            frequency1: 20.0,
-            dutyCycle1: 0.5,
-            frequency2: 5.0,
-            dutyCycle2: 0.7,
+            frequency1: 50.0,
+            dutyCycle1: 0.4,
+            frequency2: 7.0,
+            dutyCycle2: 0.4,
             icon: "bandage",
-            duration: 1200,
-            threshold: 0.75,
-            ratio: 3.5
+            duration: 5400,
+            threshold: 0.8,
+            ratio: 4.0
         ),
         Preset(
             name: "Sleep Aid",
-            frequency1: 98.0,
+            frequency1: 3.0,
             dutyCycle1: 0.3,
-            frequency2: 2.0,
+            frequency2: 3.0,
             dutyCycle2: 0.3,
             icon: "moon.zzz",
             duration: 5400,
-            threshold: 0.65,
-            ratio: 2.5
+            threshold: 0.8,
+            ratio: 4.0
         ),
         Preset(
             name: "Energy Boost",
@@ -58,8 +58,8 @@ struct PresetFrequenciesView: View {
             dutyCycle2: 0.3,
             icon: "bolt",
             duration: 5400,
-            threshold: 0.85,
-            ratio: 4.5
+            threshold: 0.8,
+            ratio: 4.0
         ),
         Preset(
             name: "Concentration",
@@ -73,24 +73,24 @@ struct PresetFrequenciesView: View {
             ratio: 4.0
         ),
         Preset(
-            name: "Bone Healing",
-            frequency1: 15.0,
-            dutyCycle1: 0.5,
-            frequency2: 72.0,
-            dutyCycle2: 0.5,
-            icon: "figure.walk",
+            name: "Migraine",
+            frequency1: 10.0,
+            dutyCycle1: 0.43,
+            frequency2: 1.0,
+            dutyCycle2: 0.4,
+            icon: "head.profile.arrow.forward.and.visionpro",
             duration: 1800,
-            threshold: 0.75,
-            ratio: 3.5
+            threshold: 0.8,
+            ratio: 3.0
         ),
         Preset(
             name: "Muscle Recovery",
-            frequency1: 40.0,
+            frequency1: 174.0,
             dutyCycle1: 0.5,
-            frequency2: 35.0,
-            dutyCycle2: 0.5,
+            frequency2: 7.83,
+            dutyCycle2: 0.4,
             icon: "figure.run",
-            duration: 1200,
+            duration: 5400,
             threshold: 0.8,
             ratio: 4.0
         ),
@@ -101,6 +101,17 @@ struct PresetFrequenciesView: View {
             frequency2: 6.0,
             dutyCycle2: 0.3,
             icon: "paintpalette.fill",
+            duration: 5400,
+            threshold: 0.8,
+            ratio: 4.0
+        ),
+        Preset(
+            name: "Healing",
+            frequency1: 432.00,
+            dutyCycle1: 0.4,
+            frequency2: 7.83,
+            dutyCycle2: 0.4,
+            icon: "leaf.fill",
             duration: 5400,
             threshold: 0.8,
             ratio: 4.0
@@ -122,11 +133,11 @@ struct PresetFrequenciesView: View {
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                             
-                            Text("F1: \(preset.frequency1, specifier: "%.1f") Hz, Duty: \(Int(preset.dutyCycle1 * 100))%")
+                            Text("F1: \(preset.frequency1, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle1 * 100))%")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             
-                            Text("F2: \(preset.frequency2, specifier: "%.1f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
+                            Text("F2: \(preset.frequency2, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             
