@@ -4,7 +4,8 @@ import SwiftData
 
 struct SessionTrackerView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \TherapySession.order) private var sessions: [TherapySession]
+    @Query private var sessions: [TherapySession]
+//    @Query(sort: \TherapySession.order) private var sessions: [TherapySession]
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var showingAddSession = false
     @State private var selectedSession: TherapySession?

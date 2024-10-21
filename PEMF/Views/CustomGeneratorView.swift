@@ -48,6 +48,13 @@ struct CustomGeneratorView: View {
     
     private func frequencyControl(frequency: Binding<Double>, dutyCycle: Binding<Double>, title: String, setFrequency: @escaping (Double) -> Void, isPlaying: Bool, playTone: @escaping () -> Void, stopTone: @escaping () -> Void) -> some View {
         VStack(spacing: 20) {
+            WaveformView(frequency: frequency.wrappedValue,
+                              width: 200,
+                              height: 40,
+                              isPlaying: isPlaying,
+                              speedFactor: 0.2)
+                     .padding(.bottom)
+            
             HStack(spacing: 40) {
                 FrequencyButton(systemName: "minus.circle.fill", action: {
                     adjustFrequency(frequency: frequency, setFrequency: setFrequency, increment: false)

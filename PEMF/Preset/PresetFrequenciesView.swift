@@ -43,10 +43,10 @@ struct PresetFrequenciesView: View {
             name: "Sleep Aid",
             frequency1: 3.0,
             dutyCycle1: 0.3,
-            frequency2: 3.0,
-            dutyCycle2: 0.3,
+            frequency2: 174.0,
+            dutyCycle2: 0.2,
             icon: "moon.zzz",
-            duration: 5400,
+            duration: 1800,
             threshold: 0.8,
             ratio: 4.0
         ),
@@ -122,7 +122,7 @@ struct PresetFrequenciesView: View {
         NavigationStack {
             List {
                 ForEach(presets) { preset in
-                    HStack {
+                    HStack(spacing: 15) {
                         Image(systemName: preset.icon)
                             .foregroundStyle(.blue)
                             .font(.title2)
@@ -133,17 +133,17 @@ struct PresetFrequenciesView: View {
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                             
-                            Text("F1: \(preset.frequency1, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle1 * 100))%")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            
-                            Text("F2: \(preset.frequency2, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            
-                            Text("Threshold: \(preset.threshold, specifier: "%.1f"), Ratio: \(preset.ratio, specifier: "%.1f")")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+//                            Text("F1: \(preset.frequency1, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle1 * 100))%")
+//                                .font(.subheadline)
+//                                .foregroundStyle(.secondary)
+//                            
+//                            Text("F2: \(preset.frequency2, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
+//                                .font(.subheadline)
+//                                .foregroundStyle(.secondary)
+//                            
+//                            Text("Threshold: \(preset.threshold, specifier: "%.1f"), Ratio: \(preset.ratio, specifier: "%.1f")")
+//                                .font(.subheadline)
+//                                .foregroundStyle(.secondary)
                             
                             if let timer = activePresets[preset.name] {
                                 Text("Time remaining: \(formatTime(timer.timeRemaining))")
