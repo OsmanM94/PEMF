@@ -21,7 +21,7 @@ struct PresetFrequenciesView: View {
             name: "Osteoporosis",
             frequency1: 50.0,
             dutyCycle1: 0.4,
-            frequency2: 100.0,
+            frequency2: 123.0,
             dutyCycle2: 0.41,
             icon: "figure.walk",
             duration: 5400,
