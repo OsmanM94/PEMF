@@ -271,6 +271,7 @@
 				INFOPLIST_FILE = PEMF/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PEMF;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses the microphone to detect audio interruptions and route changes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -304,6 +305,7 @@
 				INFOPLIST_FILE = PEMF/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PEMF;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app uses the microphone to detect audio interruptions and route changes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

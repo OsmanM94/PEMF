@@ -1,6 +1,7 @@
 
 import Foundation
 import AVFoundation
+import MediaPlayer
 
 @Observable
 final class ToneGenerator {
@@ -32,8 +33,13 @@ final class ToneGenerator {
     private var threshold: Float = 0.8
     private var ratio: Float = 4.0
     
+    private var wasPlayingBeforeInterruption = false
+    
     init() {
         audioEngine = AVAudioEngine()
+        
+        setupAudioSession()
+        setupRemoteControlEvents()
         
         let outputNode = audioEngine.outputNode
         let format = outputNode.inputFormat(forBus: 0)
@@ -90,6 +96,123 @@ final class ToneGenerator {
         } catch {
             print("Could not start audio engine: \(error.localizedDescription)")
         }
+        
+        setupNotificationObservers()
+    }
+    
+    private func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers, .defaultToSpeaker])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set up audio session: \(error)")
+        }
+    }
+
+    private func setupRemoteControlEvents() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        commandCenter.playCommand.addTarget { [weak self] _ in
+            self?.handlePlayCommand()
+            return .success
+        }
+        
+        commandCenter.pauseCommand.addTarget { [weak self] _ in
+            self?.handlePauseCommand()
+            return .success
+        }
+        
+        updateNowPlayingInfo()
+    }
+    
+    private func handlePlayCommand() {
+        resetState()
+        playTone1()
+        playTone2()
+    }
+    
+    private func handlePauseCommand() {
+        stopTone1()
+        stopTone2()
+    }
+    
+    private func resetState() {
+        currentPhase1 = 0
+        currentPhase2 = 0
+        gain1 = 0.0
+        gain2 = 0.0
+        targetGain1 = 0.0
+        targetGain2 = 0.0
+    }
+
+    private func updateNowPlayingInfo() {
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = "PEMF Therapy"
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "Your App Name"
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
+        
+        if isPlaying1 || isPlaying2 {
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+        } else {
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0.0
+        }
+
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleInterruption),
+                                               name: AVAudioSession.interruptionNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleRouteChange),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
+    }
+
+    @objc private func handleInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        switch type {
+        case .began:
+            wasPlayingBeforeInterruption = isPlaying1 || isPlaying2
+            stopTone1()
+            stopTone2()
+        case .ended:
+            guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt,
+                  AVAudioSession.InterruptionOptions(rawValue: optionsValue).contains(.shouldResume) else {
+                return
+            }
+            if wasPlayingBeforeInterruption {
+                resetState()
+                playTone1()
+                playTone2()
+            }
+        @unknown default:
+            break
+        }
+    }
+
+    @objc private func handleRouteChange(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
+            return
+        }
+
+        switch reason {
+        case .oldDeviceUnavailable:
+            stopTone1()
+            stopTone2()
+        default:
+            break
+        }
     }
     
     private func generatePulse(phase: Double, dutyCycle: Double) -> Double {
@@ -110,8 +233,10 @@ final class ToneGenerator {
     
     func playTone1() {
         DispatchQueue.main.async {
+            self.resetState()
             self.targetGain1 = 1.0
             self.isPlaying1 = true
+            self.updateNowPlayingInfo()
         }
     }
     
@@ -119,13 +244,16 @@ final class ToneGenerator {
         DispatchQueue.main.async {
             self.targetGain1 = 0.0
             self.isPlaying1 = false
+            self.updateNowPlayingInfo()
         }
     }
     
     func playTone2() {
         DispatchQueue.main.async {
+            self.resetState()
             self.targetGain2 = 1.0
             self.isPlaying2 = true
+            self.updateNowPlayingInfo()
         }
     }
     
@@ -133,6 +261,7 @@ final class ToneGenerator {
         DispatchQueue.main.async {
             self.targetGain2 = 0.0
             self.isPlaying2 = false
+            self.updateNowPlayingInfo()
         }
     }
     

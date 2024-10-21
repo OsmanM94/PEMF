@@ -4,7 +4,7 @@ import MediaPlayer
 
 struct CustomGeneratorView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
-    
+  
     @State private var sliderFrequency1: Double = 5.00
     @State private var sliderFrequency2: Double = 40.0
     
