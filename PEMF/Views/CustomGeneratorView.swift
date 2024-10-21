@@ -1,17 +1,20 @@
 
 import SwiftUI
-import MediaPlayer
+
 
 struct CustomGeneratorView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
-  
-    @State private var sliderFrequency1: Double = 5.00
-    @State private var sliderFrequency2: Double = 40.0
+    @Environment(VolumeObserver.self) private var volumeObserver
+    
+    @State private var sliderFrequency1: Double = 3.00
+    @State private var sliderFrequency2: Double = 7.83
     
     private let frequencyStep: Double = 0.01
     private let fastFrequencyStep: Double = 0.1
     
     @State private var showSinusoidalWave: Bool = false
+    
+    @State private var showVolumeAlert: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -51,11 +54,26 @@ struct CustomGeneratorView: View {
             }
             .onAppear {
                 toneGenerator.applyCustomSettings()
+                checkVolume()
             }
             .onDisappear {
                 toneGenerator.saveCustomSettings()
             }
             .navigationTitle("PEMF")
+            .overlay {
+                if showVolumeAlert {
+                    VolumeAlertView(isPresented: $showVolumeAlert)
+                }
+            }
+            .onChange(of: volumeObserver.volume) { _, _ in
+                checkVolume()
+            }
+        }
+    }
+    
+    private func checkVolume() {
+        if volumeObserver.volume < 0.99 {
+            showVolumeAlert = true
         }
     }
     
@@ -119,9 +137,13 @@ struct CustomGeneratorView: View {
             
             HStack {
                 Text("Duty: \((dutyCycle.wrappedValue * 100).rounded(), specifier: "%.0f")%")
-                Slider(value: dutyCycle, in: 0.05...0.85, step: 0.01)
-                    .frame(width: 200)
+                
+                Spacer()
+                
+                Stepper("", value: dutyCycle, in: 0.05...0.85, step: 0.01)
+                    .labelsHidden()
             }
+            .frame(width: 200)
         }
     }
     
@@ -171,6 +193,7 @@ struct FrequencyButton: View {
     NavigationStack {
         CustomGeneratorView()
             .environment(ToneGenerator())
+            .environment(VolumeObserver())
     }
 }
 

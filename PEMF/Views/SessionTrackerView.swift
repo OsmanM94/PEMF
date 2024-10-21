@@ -19,6 +19,26 @@ struct SessionTrackerView: View {
                 }
             }
             .navigationTitle("Sessions")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button("Manual Entry") {
+                            showingAddSession = true
+                        }
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                }
+            }
+            .sheet(isPresented: $showingAddSession) {
+                AddSessionView(duration: 0)
+            }
+            .sheet(item: $selectedSession) { session in
+                SessionDetailView(session: session)
+            }
         }
     }
     
@@ -29,26 +49,6 @@ struct SessionTrackerView: View {
             }
             .onMove(perform: moveSession)
             .onDelete(perform: deleteSessions)
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Button("Manual Entry") {
-                        showingAddSession = true
-                    }
-                } label: {
-                    Image(systemName: "plus")
-                }
-            }
-            ToolbarItem(placement: .navigationBarLeading) {
-                EditButton()
-            }
-        }
-        .sheet(isPresented: $showingAddSession) {
-            AddSessionView(duration: 0)
-        }
-        .sheet(item: $selectedSession) { session in
-            SessionDetailView(session: session)
         }
     }
     

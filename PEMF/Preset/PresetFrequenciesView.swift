@@ -5,6 +5,9 @@ struct PresetFrequenciesView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var activePresets: [String: PresetTimer] = [:]
     
+    @Environment(VolumeObserver.self) private var volumeObserver
+    @State private var showVolumeAlert: Bool = false
+    
     let presets: [Preset] = [
         Preset(
             name: "Relaxation",
@@ -133,18 +136,6 @@ struct PresetFrequenciesView: View {
                                 .font(.headline)
                                 .foregroundStyle(.primary)
                             
-//                            Text("F1: \(preset.frequency1, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle1 * 100))%")
-//                                .font(.subheadline)
-//                                .foregroundStyle(.secondary)
-//                            
-//                            Text("F2: \(preset.frequency2, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
-//                                .font(.subheadline)
-//                                .foregroundStyle(.secondary)
-//                            
-//                            Text("Threshold: \(preset.threshold, specifier: "%.1f"), Ratio: \(preset.ratio, specifier: "%.1f")")
-//                                .font(.subheadline)
-//                                .foregroundStyle(.secondary)
-                            
                             if let timer = activePresets[preset.name] {
                                 Text("Time remaining: \(formatTime(timer.timeRemaining))")
                                     .font(.subheadline)
@@ -170,9 +161,26 @@ struct PresetFrequenciesView: View {
                 }
             }
             .navigationTitle("Presets")
+            .overlay {
+                if showVolumeAlert {
+                    VolumeAlertView(isPresented: $showVolumeAlert)
+                }
+            }
+            .onChange(of: volumeObserver.volume) { _, _ in
+                checkVolume()
+            }
         }
         .onDisappear {
             stopAllPresets()
+        }
+        .onAppear {
+            checkVolume()
+        }
+    }
+    
+    private func checkVolume() {
+        if volumeObserver.volume < 0.99 {
+            showVolumeAlert = true
         }
     }
     
@@ -224,4 +232,19 @@ struct PresetFrequenciesView: View {
 #Preview {
     PresetFrequenciesView()
         .environment(ToneGenerator())
+        .environment(VolumeObserver())
 }
+
+
+
+//                            Text("F1: \(preset.frequency1, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle1 * 100))%")
+//                                .font(.subheadline)
+//                                .foregroundStyle(.secondary)
+//
+//                            Text("F2: \(preset.frequency2, specifier: "%.2f") Hz, Duty: \(Int(preset.dutyCycle2 * 100))%")
+//                                .font(.subheadline)
+//                                .foregroundStyle(.secondary)
+//
+//                            Text("Threshold: \(preset.threshold, specifier: "%.1f"), Ratio: \(preset.ratio, specifier: "%.1f")")
+//                                .font(.subheadline)
+//                                .foregroundStyle(.secondary)

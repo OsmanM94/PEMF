@@ -16,21 +16,21 @@ final class ToneGenerator {
     private var targetGain1: Float = 0.0
     private var targetGain2: Float = 0.0
     private let smoothness: Float = 0.005
-    private var targetFrequency1: Double = 5.0
-    private var targetFrequency2: Double = 40.0
+    private var targetFrequency1: Double = 3.0
+    private var targetFrequency2: Double = 7.83
     private let frequencySmoothing: Double = 0.01
     
     private(set) var isPlaying1 = false
     private(set) var isPlaying2 = false
-    private(set) var frequency1: Double = 5.0
-    private(set) var frequency2: Double = 40.0
-    var dutyCycle1: Double = 0.5
-    var dutyCycle2: Double = 0.5
+    private(set) var frequency1: Double = 3.0
+    private(set) var frequency2: Double = 7.83
+    var dutyCycle1: Double = 0.1
+    var dutyCycle2: Double = 0.1
     
-    private var customFrequency1: Double = 5.0
-    private var customFrequency2: Double = 40.0
-    private var customDutyCycle1: Double = 0.5
-    private var customDutyCycle2: Double = 0.5
+    private var customFrequency1: Double = 3.0
+    private var customFrequency2: Double = 7.83
+    private var customDutyCycle1: Double = 0.1
+    private var customDutyCycle2: Double = 0.1
     
     private var threshold: Float = 0.8
     private var ratio: Float = 4.0
