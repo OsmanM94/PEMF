@@ -5,7 +5,6 @@ import SwiftData
 struct SessionTrackerView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var sessions: [TherapySession]
-//    @Query(sort: \TherapySession.order) private var sessions: [TherapySession]
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var showingAddSession = false
     @State private var selectedSession: TherapySession?
@@ -133,11 +132,41 @@ struct AddSessionView: View {
     var duration: TimeInterval
     @State private var notes = ""
     @State private var manualDuration: Double = 0
+    @State private var selectedPreset: PresetEntry?
+    @State private var isCustom = false
+    
+    let presets: [PresetEntry] = [
+        PresetEntry(name: "Relaxation", frequency1: 10.0, frequency2: 7.83),
+        PresetEntry(name: "Osteoporosis", frequency1: 15.0, frequency2: 72.0),
+        PresetEntry(name: "Pain Relief", frequency1: 20.0, frequency2: 5.0),
+        PresetEntry(name: "Sleep Aid", frequency1: 4.0, frequency2: 2.0),
+        PresetEntry(name: "Energy Boost", frequency1: 30.0, frequency2: 25.0),
+        PresetEntry(name: "Concentration", frequency1: 123.47, frequency2: 23.0),
+        PresetEntry(name: "Migraine", frequency1: 8.0, frequency2: 6.0),
+        PresetEntry(name: "Muscle Recovery", frequency1: 40.0, frequency2: 35.0),
+        PresetEntry(name: "Creativity", frequency1: 110.0, frequency2: 6.0),
+        PresetEntry(name: "Healing", frequency1: 15.0, frequency2: 10.0)
+    ]
     
     var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Session Details")) {
+                Section(header: Text("Session Type")) {
+                    Picker("Session Type", selection: $isCustom) {
+                        Text("Preset").tag(false)
+                        Text("Custom").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                }
+                .listRowBackground(Color.clear)
+                
+                if isCustom {
+                    customSessionSection
+                } else {
+                    presetSessionSection
+                }
+                
+                Section(header: Text("Duration")) {
                     if duration == 0 {
                         HStack {
                             Text("Duration (minutes)")
@@ -152,16 +181,6 @@ struct AddSessionView: View {
                             Spacer()
                             Text(formatDuration(duration))
                         }
-                    }
-                    HStack {
-                        Text("Frequency 1")
-                        Spacer()
-                        Text("\(toneGenerator.frequency1, specifier: "%.1f") Hz")
-                    }
-                    HStack {
-                        Text("Frequency 2")
-                        Spacer()
-                        Text("\(toneGenerator.frequency2, specifier: "%.1f") Hz")
                     }
                 }
                 
@@ -178,29 +197,86 @@ struct AddSessionView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        let sessionDuration = duration == 0 ? (manualDuration * 60) : duration
-                        let newSession = TherapySession(
-                            date: Date(),
-                            duration: sessionDuration,
-                            frequency1: toneGenerator.frequency1,
-                            frequency2: toneGenerator.frequency2,
-                            preset: nil,
-                            notes: notes
-                        )
-                        modelContext.insert(newSession)
-                        dismiss()
+                        saveSession()
                     }
                 }
             }
         }
     }
     
-    func formatDuration(_ duration: TimeInterval) -> String {
+    private var customSessionSection: some View {
+        Section(header: Text("Custom Frequencies")) {
+            HStack {
+                Text("Frequency 1")
+                Spacer()
+                Text("\(toneGenerator.frequency1, specifier: "%.1f") Hz")
+            }
+            HStack {
+                Text("Frequency 2")
+                Spacer()
+                Text("\(toneGenerator.frequency2, specifier: "%.1f") Hz")
+            }
+        }
+    }
+    
+    private var presetSessionSection: some View {
+        Section(header: Text("Preset")) {
+            Picker("Select Preset", selection: $selectedPreset) {
+                Text("Choose a preset").tag(PresetEntry?.none)
+                ForEach(presets, id: \.name) { preset in
+                    Text(preset.name).tag(PresetEntry?.some(preset))
+                }
+            }
+            if let preset = selectedPreset {
+                Text("Frequency 1: \(preset.frequency1, specifier: "%.1f") Hz")
+                Text("Frequency 2: \(preset.frequency2, specifier: "%.1f") Hz")
+            }
+        }
+    }
+    
+    private func saveSession() {
+        let sessionDuration = duration == 0 ? (manualDuration * 60) : duration
+        let newSession: TherapySession
+        
+        if isCustom {
+            newSession = TherapySession(
+                date: Date(),
+                duration: sessionDuration,
+                frequency1: toneGenerator.frequency1,
+                frequency2: toneGenerator.frequency2,
+                preset: nil,
+                notes: notes
+            )
+        } else if let preset = selectedPreset {
+            newSession = TherapySession(
+                date: Date(),
+                duration: sessionDuration,
+                frequency1: preset.frequency1,
+                frequency2: preset.frequency2,
+                preset: preset.name,
+                notes: notes
+            )
+        } else {
+            // Handle case where no preset is selected
+            return
+        }
+        
+        modelContext.insert(newSession)
+        dismiss()
+    }
+    
+    private func formatDuration(_ duration: TimeInterval) -> String {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute, .second]
         formatter.unitsStyle = .abbreviated
         return formatter.string(from: duration) ?? ""
     }
+}
+
+struct PresetEntry: Hashable {
+    let name: String
+    let frequency1: Double
+    let frequency2: Double
 }
 
 struct SessionDetailView: View {

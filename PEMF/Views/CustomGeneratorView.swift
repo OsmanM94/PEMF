@@ -11,6 +11,8 @@ struct CustomGeneratorView: View {
     private let frequencyStep: Double = 0.01
     private let fastFrequencyStep: Double = 0.1
     
+    @State private var showSinusoidalWave: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 50) {
@@ -36,6 +38,17 @@ struct CustomGeneratorView: View {
                     .frame(maxWidth: .infinity, alignment: .bottomLeading)
                     .padding()
             }
+            .toolbar {
+                Menu {
+                    Button {
+                        showSinusoidalWave.toggle()
+                    } label: {
+                        Text("Sinusoid Wave")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                }
+            }
             .onAppear {
                 toneGenerator.applyCustomSettings()
             }
@@ -48,12 +61,14 @@ struct CustomGeneratorView: View {
     
     private func frequencyControl(frequency: Binding<Double>, dutyCycle: Binding<Double>, title: String, setFrequency: @escaping (Double) -> Void, isPlaying: Bool, playTone: @escaping () -> Void, stopTone: @escaping () -> Void) -> some View {
         VStack(spacing: 20) {
-            WaveformView(frequency: frequency.wrappedValue,
-                              width: 200,
-                              height: 40,
-                              isPlaying: isPlaying,
-                              speedFactor: 0.2)
-                     .padding(.bottom)
+            if showSinusoidalWave {
+                WaveformView(frequency: frequency.wrappedValue,
+                             width: 300,
+                             height: 40,
+                             isPlaying: isPlaying,
+                             speedFactor: 0.1)
+                .padding(.bottom)
+            }
             
             HStack(spacing: 40) {
                 FrequencyButton(systemName: "minus.circle.fill", action: {

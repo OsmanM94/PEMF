@@ -12,7 +12,7 @@ struct WaveformView: View {
     let width: CGFloat
     let height: CGFloat
     let isPlaying: Bool
-    let speedFactor: Double // New parameter to control animation speed
+    let speedFactor: Double 
     
     var body: some View {
         TimelineView(.animation) { timeline in

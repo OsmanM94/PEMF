@@ -10,9 +10,22 @@
 		625CFFC22CC54F9100F02F38 /* PEMF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PEMF.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		625C00092CC5E54700F02F38 /* Exceptions for "PEMF" folder in "PEMF" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 625CFFC12CC54F9100F02F38 /* PEMF */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		625CFFC42CC54F9100F02F38 /* PEMF */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				625C00092CC5E54700F02F38 /* Exceptions for "PEMF" folder in "PEMF" target */,
+			);
 			path = PEMF;
 			sourceTree = "<group>";
 		};
@@ -255,6 +268,7 @@
 				DEVELOPMENT_TEAM = VNS8ZUW75C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PEMF/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PEMF;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -287,6 +301,7 @@
 				DEVELOPMENT_TEAM = VNS8ZUW75C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PEMF/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PEMF;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
