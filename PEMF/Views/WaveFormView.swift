@@ -32,7 +32,7 @@ struct WaveformView: View {
                     path.addLine(to: CGPoint(x: x, y: y))
                 }
                 
-                context.stroke(path, with: .color(.blue), lineWidth: 2)
+                context.stroke(path, with: .color(.green), lineWidth: 2)
             }
         }
         .frame(width: width, height: height)

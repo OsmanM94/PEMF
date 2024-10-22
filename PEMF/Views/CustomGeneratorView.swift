@@ -4,7 +4,6 @@ import SwiftUI
 
 struct CustomGeneratorView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
-    @Environment(VolumeObserver.self) private var volumeObserver
     
     @State private var sliderFrequency1: Double = 3.00
     @State private var sliderFrequency2: Double = 7.83
@@ -13,8 +12,6 @@ struct CustomGeneratorView: View {
     private let fastFrequencyStep: Double = 0.1
     
     @State private var showSinusoidalWave: Bool = false
-    
-    @State private var showVolumeAlert: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -26,7 +23,7 @@ struct CustomGeneratorView: View {
                                  isPlaying: toneGenerator.isPlaying1,
                                  playTone: toneGenerator.playTone1,
                                  stopTone: toneGenerator.stopTone1)
-               
+                
                 frequencyControl(frequency: $sliderFrequency2,
                                  dutyCycle: Bindable(toneGenerator).dutyCycle2,
                                  title: "Frequency 2",
@@ -35,12 +32,8 @@ struct CustomGeneratorView: View {
                                  playTone: toneGenerator.playTone2,
                                  stopTone: toneGenerator.stopTone2)
                 
-                Text("Design by Osman Sevil")
-                    .foregroundStyle(.secondary)
-                    .font(.footnote)
-                    .frame(maxWidth: .infinity, alignment: .bottomLeading)
-                    .padding()
             }
+            .navigationTitle("Custom")
             .toolbar {
                 Menu {
                     Button {
@@ -54,26 +47,10 @@ struct CustomGeneratorView: View {
             }
             .onAppear {
                 toneGenerator.applyCustomSettings()
-                checkVolume()
             }
             .onDisappear {
                 toneGenerator.saveCustomSettings()
             }
-            .navigationTitle("PEMF")
-            .overlay {
-                if showVolumeAlert {
-                    VolumeAlertView(isPresented: $showVolumeAlert)
-                }
-            }
-            .onChange(of: volumeObserver.volume) { _, _ in
-                checkVolume()
-            }
-        }
-    }
-    
-    private func checkVolume() {
-        if volumeObserver.volume < 0.99 {
-            showVolumeAlert = true
         }
     }
     

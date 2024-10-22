@@ -5,9 +5,6 @@ struct PresetFrequenciesView: View {
     @Environment(ToneGenerator.self) private var toneGenerator
     @State private var activePresets: [String: PresetTimer] = [:]
     
-    @Environment(VolumeObserver.self) private var volumeObserver
-    @State private var showVolumeAlert: Bool = false
-    
     let presets: [Preset] = [
         Preset(
             name: "Relaxation",
@@ -161,26 +158,9 @@ struct PresetFrequenciesView: View {
                 }
             }
             .navigationTitle("Presets")
-            .overlay {
-                if showVolumeAlert {
-                    VolumeAlertView(isPresented: $showVolumeAlert)
-                }
-            }
-            .onChange(of: volumeObserver.volume) { _, _ in
-                checkVolume()
-            }
         }
         .onDisappear {
             stopAllPresets()
-        }
-        .onAppear {
-            checkVolume()
-        }
-    }
-    
-    private func checkVolume() {
-        if volumeObserver.volume < 0.99 {
-            showVolumeAlert = true
         }
     }
     
@@ -232,7 +212,6 @@ struct PresetFrequenciesView: View {
 #Preview {
     PresetFrequenciesView()
         .environment(ToneGenerator())
-        .environment(VolumeObserver())
 }
 
 

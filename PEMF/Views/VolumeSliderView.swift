@@ -50,7 +50,7 @@ struct VolumeAlertView: View {
                     Text("Volume")
                         .font(.title2.bold())
                     
-                    Text("You must set your device volume to maximum.")
+                    Text("You must set your device volume over 70%.")
                         .multilineTextAlignment(.center)
                 }
                 
@@ -65,7 +65,7 @@ struct VolumeAlertView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.extraLarge)
-                .disabled(volumeObserver.volume < 0.99) // Disable if not at max volume
+                .disabled(volumeObserver.volume < 0.75)
             }
             .padding()
             .background(Color(.systemGray6))
