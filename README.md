@@ -3,4 +3,3 @@ Pulsed Electromagnetic Field (PEMF) therapy app powered by a custom-built ToneGe
 • Generates custom or preset frequencies for PEMF devices
 • Each frequency is professionally calibrated
 • Not yet live on the App Store, currently in testing
-• Demo available on my LinkedIn page
